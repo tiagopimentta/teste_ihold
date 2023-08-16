@@ -11,8 +11,15 @@ use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 class ApiProtectedRoute extends BaseMiddleware
 {
     /**
-     * Handle an incoming request.
-     *
+     * @OA\SecurityScheme(
+     *     type="http",
+     *     description="Login with email and password to get the authentication token",
+     *     name="Token based Based",
+     *     in="header",
+     *     scheme="bearer",
+     *     bearerFormat="JWT",
+     *     securityScheme="jwt",
+     * )
      * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
