@@ -1,0 +1,26 @@
+version: '4.2'
+services:
+    test_app:
+        container_name: test_app
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 8001:8000
+        volumes:
+            - .:/app
+        command: 'php artisan serve --host=0.0.0.0'
+        depends_on:
+            - db_user
+
+    test_db:
+        container_name: test_db
+        image: mysql
+        restart: always
+        environment:
+            MYSQL_DATABASE: mysql
+            MYSQL_USER: root
+            MYSQL_PASSWORD: root
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "33062:3306"
