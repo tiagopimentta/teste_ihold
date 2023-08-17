@@ -24,6 +24,33 @@
                     }
                 ]
             }
+        },
+        "/api/orders/{orderId}/items": {
+            "get": {
+                "tags": [
+                    "Order Item"
+                ],
+                "summary": "List all items of orders",
+                "operationId": "7edf93a3f116117b537729efce84ddc1",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "Order id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
         }
     },
     "components": {
