@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Products;
-use App\Models\Merchants;
+use App\Models\Product;
+use App\Models\Merchant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DB;
@@ -16,7 +16,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Products::all();
+        $products = Product::all();
         return response()->json($products);
     }
 
@@ -33,25 +33,25 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-       
+
         if(!$request->merchant_id){
             return response()->json("Merchant code does not found");
         }
 
-        $dados_merchant = Merchants::find($request->merchant_id);//achou o id de usuario do merchant
+        $dados_merchant = Merchant::find($request->merchant_id);//achou o id de usuario do merchant
         if(!$dados_merchant){
             return response()->json("Merchant code does not exist");
        }
         $verifica_admin = User::find($dados_merchant->admin_id);//achou se é admim ou nao
-    
+
         if($verifica_admin->is_admin){
             $products = $request->all();
-            Products::create($products);
+            Product::create($products);
             return response()->json("Registered Product With Successe");
        }else{
         return response()->json("You do not have permission to register a product");
        }
-        
+
     }
 
     /**
@@ -59,7 +59,7 @@ class ProductsController extends Controller
      */
     public function show(string $id)
     {
-        $products = Products::find($id);
+        $products = Product::find($id);
         return response()->json($products);
     }
 
@@ -76,12 +76,12 @@ class ProductsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-     
+
         if(!$request->merchant_id){
             return response()->json("Merchant code does not found");
         }
 
-        $dados_merchant = Merchants::find($request->merchant_id);//achou o id de usuario do merchant
+        $dados_merchant = Merchant::find($request->merchant_id);//achou o id de usuario do merchant
         if(!$dados_merchant){
             return response()->json("Merchant code does not exist");
        }
@@ -89,7 +89,7 @@ class ProductsController extends Controller
 
         if($verifica_admin->is_admin){
             $data = $request->only(['name','merchant_id','price','status']);
-            $products = Products::find($id);
+            $products = Product::find($id);
             $products->update($data);
         return response()->json("Altered Product With Successe");
         }else{
@@ -106,16 +106,16 @@ class ProductsController extends Controller
             return response()->json("Merchant code does not found");
         }
 
-        $dados_merchant = Merchants::find($request->merchant_id);//achou o id de usuario do merchant
+        $dados_merchant = Merchant::find($request->merchant_id);//achou o id de usuario do merchant
         if(!$dados_merchant){
             return response()->json("Merchant code does not exist");
        }
         $verifica_admin = User::find($dados_merchant->admin_id);//achou se é admim ou nao
 
         if($verifica_admin->is_admin){
-            $products = Products::find($id);
+            $products = Product::find($id);
             $products->delete();
-            return response()->json("Deleted Product With Successe");  
+            return response()->json("Deleted Product With Successe");
         }else{
             return response()->json("You do not have permission to delet a product");
         }
