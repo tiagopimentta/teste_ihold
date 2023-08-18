@@ -10,6 +10,7 @@ class ProductTest extends TestCase
     const BASE_API = 'api/products/';
 
     public $idUserLogged;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -20,8 +21,8 @@ class ProductTest extends TestCase
     {
         $params = [
             'name' => fake()->word(),
-            'price'=>10,
-            'status'=>'Ativado'
+            'price' => 10,
+            'status' => 'Ativo'
 
         ];
 
@@ -55,8 +56,8 @@ class ProductTest extends TestCase
 
         $params = [
             'name' => fake()->word(),
-            'price'=>10,
-            'status'=>'Ativado'
+            'price' => 10,
+            'status' => 'Ativo'
 
         ];
 
@@ -77,8 +78,8 @@ class ProductTest extends TestCase
     {
         $params = [
             'name' => fake()->word(),
-            'price'=>10,
-            'status'=>'Ativado'
+            'price' => 10,
+            'status' => 'Ativo'
 
         ];
 
@@ -88,10 +89,14 @@ class ProductTest extends TestCase
         ];
 
 
-        $merchant = $this->delete('api/merchants/1', $paramsMerchant);
+        $merchant = $this->post('api/merchants', $paramsMerchant);
         $params['merchant_id'] = $merchant->json()['data']['response']['id'];
-        $response = $this->post(self::BASE_API, $params);
-        $response->assertStatus(Response::HTTP_CREATED);
+        $produto = $this->post(self::BASE_API, $params);
+
+        $id = $produto->json()['data']['response']['id'];
+
+        $response = $this->delete(self::BASE_API . $id);
+        $response->assertStatus(Response::HTTP_OK);
 
 
     }
