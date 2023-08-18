@@ -11,15 +11,14 @@ services:
             - .:/app
         command: 'php artisan serve --host=0.0.0.0'
         depends_on:
-            - db_user
+            - test_db
 
     test_db:
         container_name: test_db
         image: mysql
         restart: always
         environment:
-            MYSQL_DATABASE: mysql
-            MYSQL_USER: root
+            MYSQL_DATABASE: homestead
             MYSQL_PASSWORD: root
             MYSQL_ROOT_PASSWORD: root
         ports:
