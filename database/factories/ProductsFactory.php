@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Order;
-use App\Models\Merchants;
+use App\Models\Merchant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductsFactory extends Factory
@@ -17,7 +17,7 @@ class ProductsFactory extends Factory
     {
         return [
             'name' => fake()->word(),
-            'merchant_id' => Merchants::inRandomOrder()->first()->id,
+            'merchant_id' => Merchant::inRandomOrder()->first()->id,
             'price'=> fake()->randomDigit(),
             'status'=>'Ativo'
         ];
