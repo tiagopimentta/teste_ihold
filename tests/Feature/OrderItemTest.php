@@ -19,7 +19,6 @@ class OrderItemTest extends TestCase
     public function test_response_200_in_orders(): void
     {
         $response = $this->get(self::BASE_API . '1/items');
-
         $response->assertStatus(200);
     }
 }
