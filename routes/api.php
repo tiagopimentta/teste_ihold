@@ -1,12 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MerchantController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderItemController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\MerchantsController;
-use App\Http\Controllers\ProductsController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +37,6 @@ Route::group(['middleware' => ['apiJwt']], function() {
         Route::resource('items', OrderItemController::class)
             ->only('index', 'store', 'destroy');
     });
-    Route::resource('merchants',MerchantsController::class);
-    Route::resource('products',ProductsController::class);
+    Route::resource('merchants', MerchantController::class);
+    Route::resource('products', ProductController::class);
 });
