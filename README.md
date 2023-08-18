@@ -1,11 +1,33 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-### Laravel 10.18.0
-
-## Teste Ihold
+Teste Ihold
 
 
+- Clonar repositório
+  >git clone https://github.com/tiagopimentta/teste_ihold
 
-- Versão do php >= 8.0.
-- Mysql >= 5.7
 
+- Entrar no repositório clonado
+  >cd teste_ihold
+
+
+- Subir os serviços com docker
+  >make up
+
+- Copia o arquivo .env.example para o .env
+  >make env
+
+- Gera o secret jwt
+  >make jwt
+
+- Install migration and seeders
+  >make db
+
+- Executar os testes
+  >make test
+
+- Para documentação (swagger), execute o comando a baixo para gerar um token válido. 
+  >make token
+
+- Swagger API
+  >http://localhost:8001/api/documentation

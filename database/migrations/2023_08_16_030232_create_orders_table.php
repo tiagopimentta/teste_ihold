@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->enum('status', ['PROGRESS', 'COMPLETED', 'CANCELED']);
+            $table->enum('status', ['Pendente', 'Finalizado', 'Cancelado']);
             $table->timestamps();
         });
     }

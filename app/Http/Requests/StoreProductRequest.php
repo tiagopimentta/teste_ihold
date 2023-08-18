@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOrderItemRequest extends FormRequest
+class StoreProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,14 +17,15 @@ class StoreOrderItemRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            'order_id' => 'required|int|exists:orders,id',
-            'product_id' => 'required|int|exists:orders,id',
-            'quantity' => 'required|int'
+            'name'=>'required',
+            'merchant_id'=>'required|exists:merchants,id',
+            'price'=>'required',
+            'status'=>'required'
         ];
     }
 }

@@ -3,55 +3,46 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreOrderItemRequest;
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
-use App\Http\Resources\OrderItemResource;
-use App\Services\OrderItemService;
+use App\Http\Resources\ProductResource;
+use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\StoreProductRequest;
 
-class OrderItemController extends Controller
+
+class ProductController extends Controller
 {
-    /**
-     * @var OrderItemService
-     */
-    protected OrderItemService $service;
 
-    public function __construct(OrderItemService $service)
+    /**
+     * @var ProductService
+     */
+
+    protected ProductService $service;
+
+    public function __construct(ProductService $service)
     {
         $this->service = $service;
     }
 
     /**
      * @OA\Get (
-     *     tags={"Order Item"},
-     *     path="/api/orders/{id}/items",
-     *     summary="List all items of orders",
-     *     @OA\Parameter(
-     *         description="Order id",
-     *         in="path",
-     *         name="id",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
+     *     tags={"Products"},
+     *     path="/api/products",
+     *     summary="List all products",
      *     @OA\Response(
      *         response=200,
      *         description="OK",
      *     ),
      *     security={{ "jwt": {} }}
      * )
-     * @param Request $request
-     * @param int $id
      * @return JsonResponse
      */
 
-    public function index(Request $request, int $orderId): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $request->merge(['order_id' => $orderId]);
-        return $this->ok(OrderItemResource::collection(
+        return $this->ok(ProductResource::collection(
             $this
                 ->service
                 ->getRepository()
@@ -59,17 +50,22 @@ class OrderItemController extends Controller
         ));
     }
 
+    public function create()
+    {
+        //
+    }
+
     /**
      *
      * @OA\Post (
-     *     tags={"Order Item"},
-     *     path="/api/orders/{id}/items",
-     *     summary="Create a order Item",
+     *     tags={"Products"},
+     *     path="/api/products",
+     *     summary="Create a product",
      *     @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *             example="Order registered successfully"
+     *             example="Product registered successfully"
      *         )
      *     ),
      *     @OA\Response(
@@ -80,18 +76,18 @@ class OrderItemController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="order_id", type="integer", example="1"),
-     *             @OA\Property(property="product_id", type="integer", example="1"),
-     *             @OA\Property(property="quantity", type="integer", example="10"),
+     *             @OA\Property(property="name", type="string", example="Skoll 200ML"),
+     *             @OA\Property(property="merchant_id", type="integer", example="1"),
+     *             @OA\Property(property="price", type="integer", example="100.00"),
+     *             @OA\Property(property="status", type="string", example="Ativo"),
      *         )
      *     )
      * )
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
-
-    public function store(StoreOrderItemRequest $request): JsonResponse
+    public function store(StoreProductRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -110,35 +106,35 @@ class OrderItemController extends Controller
     /**
      *
      * @OA\Get(
-     *     tags={"Order"},
-     *     path="/api/orders/{id}",
-     *     summary="Get information about an order",
+     *     tags={"Products"},
+     *     path="/api/products/{id}",
+     *     summary="Get information about an products",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID of the order to retrieve",
+     *         description="ID of the products to retrieve",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *             example="Order retrieved successfully"
+     *             example="Products retrieved successfully"
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Order not found"
+     *         description="Products not found"
      *     ),
      *     @OA\Response(
      *         response=403,
-     *         description="You do not have permission to retrieve the order"
+     *         description="You do not have permission to retrieve the products"
      *     ),
      *     security={{ "jwt": {} }}
      * )
      *
-     * @param  int $id
+     * @param int $id
      * @return JsonResponse
      */
 
@@ -147,7 +143,57 @@ class OrderItemController extends Controller
         return $this->ok($this->service->getRepository()->find($id));
     }
 
-    public function update(UpdateOrderRequest $request, int $id): JsonResponse
+    /**
+     * Show the form for editing the specified resource.
+     */
+
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     *
+     * @OA\Put (
+     *     tags={"Products"},
+     *     path="/api/products/{id}/",
+     *     summary="Update a product",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the product to update",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Product updated successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     security={{ "jwt": {} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Skoll 1L"),
+     *             @OA\Property(property="price", type="number", format="float", example="100.00"),
+     *             @OA\Property(property="status", type="string", example="Ativo"),
+     *         )
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @param int id
+     * @return JsonResponse
+     */
+
+
+    public function update(Request $request, int $id): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -167,47 +213,39 @@ class OrderItemController extends Controller
     /**
      *
      * @OA\Delete (
-     *     tags={"Order Item"},
-     *     path="/api/orders/{orderId}/items/{id} ",
-     *     summary="Delete a orderItem",
-     *     @OA\Parameter(
-     *         name="orderId",
-     *         in="path",
-     *         required=true,
-     *         description="ID of the order to delete",
-     *         @OA\Schema(type="integer")
-     *     ),
+     *     tags={"Products"},
+     *     path="/api/products/{id}/",
+     *     summary="Delete a product",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID of the orderItem to delete",
+     *         description="ID of the product to delete",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *             example="OrderItem deleted successfully"
+     *             example="Product deleted successfully"
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="OrderItem not found"
+     *         description="Product not found"
      *     ),
      *     @OA\Response(
      *         response=403,
-     *         description="You do not have permission to delete the order Item"
+     *         description="You do not have permission to delete the product"
      *     ),
      *     security={{ "jwt": {} }}
      * )
      *
-     * @param  int $orderId
-     * @param  int $id
+     * @param int $id
      * @return JsonResponse
      */
 
-    public function destroy(int $orderId ,int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
             $this->service->getRepository()->find($id);

@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MerchantController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderItemController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,17 +32,13 @@ Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
 Route::group(['middleware' => ['apiJwt']], function() {
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
-
-    /**
-     * Orders
-     */
     Route::resource('/orders', OrderController::class);
 
-    /**
-     * Order Items
-     */
-    Route::group(['prefix' => '/orders/{orderId}/'], function() {
+    Route::group(['prefix' => '/orders/{id}/'], function() {
         Route::resource('items', OrderItemController::class)
             ->only('index', 'store', 'destroy');
     });
+
+    Route::resource('merchants', MerchantController::class);
+    Route::resource('products', ProductController::class);
 });

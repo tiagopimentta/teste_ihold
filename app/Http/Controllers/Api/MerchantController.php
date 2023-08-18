@@ -3,73 +3,60 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreOrderItemRequest;
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
-use App\Http\Resources\OrderItemResource;
-use App\Services\OrderItemService;
+use App\Http\Resources\MerchantResource;
+use App\Services\MerchantService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
-class OrderItemController extends Controller
+class MerchantController extends Controller
 {
     /**
-     * @var OrderItemService
+     * @var MerchantService
      */
-    protected OrderItemService $service;
+    protected MerchantService $service;
 
-    public function __construct(OrderItemService $service)
+    public function __construct(MerchantService $service)
     {
         $this->service = $service;
     }
 
     /**
      * @OA\Get (
-     *     tags={"Order Item"},
-     *     path="/api/orders/{id}/items",
-     *     summary="List all items of orders",
-     *     @OA\Parameter(
-     *         description="Order id",
-     *         in="path",
-     *         name="id",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
+     *     tags={"Merchants"},
+     *     path="/api/merchants",
+     *     summary="List all merchants",
      *     @OA\Response(
      *         response=200,
      *         description="OK",
      *     ),
      *     security={{ "jwt": {} }}
      * )
-     * @param Request $request
-     * @param int $id
+     * @param Request $id
      * @return JsonResponse
      */
-
-    public function index(Request $request, int $orderId): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $request->merge(['order_id' => $orderId]);
-        return $this->ok(OrderItemResource::collection(
+        return $this->ok(MerchantResource::collection(
             $this
                 ->service
                 ->getRepository()
-                ->getPaginationList(params: $request->all())
+                ->getPaginationList(params: $request->all(), with: ['products', 'admin'])
         ));
     }
 
     /**
      *
      * @OA\Post (
-     *     tags={"Order Item"},
-     *     path="/api/orders/{id}/items",
-     *     summary="Create a order Item",
+     *     tags={"Merchants"},
+     *     path="/api/merchants",
+     *     summary="Create a merchants",
      *     @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *             example="Order registered successfully"
+     *             example="Merchants registered successfully"
      *         )
      *     ),
      *     @OA\Response(
@@ -80,9 +67,8 @@ class OrderItemController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="order_id", type="integer", example="1"),
-     *             @OA\Property(property="product_id", type="integer", example="1"),
-     *             @OA\Property(property="quantity", type="integer", example="10"),
+     *             @OA\Property(property="merchant_name", type="string", example="Zé delivery"),
+     *             @OA\Property(property="admin_id", type="integer", example="1"),
      *         )
      *     )
      * )
@@ -91,7 +77,7 @@ class OrderItemController extends Controller
      * @return JsonResponse
      */
 
-    public function store(StoreOrderItemRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -108,32 +94,31 @@ class OrderItemController extends Controller
     }
 
     /**
-     *
      * @OA\Get(
-     *     tags={"Order"},
-     *     path="/api/orders/{id}",
-     *     summary="Get information about an order",
+     *     tags={"Merchants"},
+     *     path="/api/merchants/{id}",
+     *     summary="Get information about an merchants",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID of the order to retrieve",
+     *         description="ID of the merchants to retrieve",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *             example="Order retrieved successfully"
+     *             example="Merchants retrieved successfully"
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Order not found"
+     *         description="Merchants not found"
      *     ),
      *     @OA\Response(
      *         response=403,
-     *         description="You do not have permission to retrieve the order"
+     *         description="You do not have permission to retrieve the merchants"
      *     ),
      *     security={{ "jwt": {} }}
      * )
@@ -147,11 +132,49 @@ class OrderItemController extends Controller
         return $this->ok($this->service->getRepository()->find($id));
     }
 
-    public function update(UpdateOrderRequest $request, int $id): JsonResponse
+    /**
+     *
+     * @OA\Put (
+     *     tags={"Merchants"},
+     *     path="/api/merchants/{id}/",
+     *     summary="Update a Merchants",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the merchants to update",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Merchants updated successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     security={{ "jwt": {} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="merchant_name", type="string", example="João"),
+     *         )
+     *     )
+     * )
+     *
+     * @param  Request  $request
+     * @param  int   $id
+     * @return JsonResponse
+     */
+
+    public function update(Request $request, int $id): JsonResponse
     {
         try {
             DB::beginTransaction();
-            $response = $this->service->update($id, $request->all());
+            $response = $this->service->update($id, $request->only(['merchant_name', 'admin_id']));
             DB::commit();
             return $this->success(
                 $this->messageSuccessDefault,
@@ -167,47 +190,39 @@ class OrderItemController extends Controller
     /**
      *
      * @OA\Delete (
-     *     tags={"Order Item"},
-     *     path="/api/orders/{orderId}/items/{id} ",
-     *     summary="Delete a orderItem",
-     *     @OA\Parameter(
-     *         name="orderId",
-     *         in="path",
-     *         required=true,
-     *         description="ID of the order to delete",
-     *         @OA\Schema(type="integer")
-     *     ),
+     *     tags={"Merchants"},
+     *     path="/api/merchants/{id}/",
+     *     summary="Delete a merchants",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID of the orderItem to delete",
+     *         description="ID of the merchants to delete",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *             example="OrderItem deleted successfully"
+     *             example="Merchant deleted successfully"
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="OrderItem not found"
+     *         description="Order not found"
      *     ),
      *     @OA\Response(
      *         response=403,
-     *         description="You do not have permission to delete the order Item"
+     *         description="You do not have permission to delete the Merchants"
      *     ),
      *     security={{ "jwt": {} }}
      * )
      *
-     * @param  int $orderId
-     * @param  int $id
+     * @param  int  $id
      * @return JsonResponse
      */
 
-    public function destroy(int $orderId ,int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
             $this->service->getRepository()->find($id);

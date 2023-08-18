@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Order;
+use App\Models\Merchant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class OrderFactory extends Factory
+class ProductFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -15,7 +16,10 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::inRandomOrder()->where(['is_admin' => false])->first()->id,
+            'name' => fake()->word(),
+            'merchant_id' => Merchant::inRandomOrder()->first()->id,
+            'price'=> fake()->randomDigit(),
+            'status'=>'Ativo'
         ];
     }
 }
