@@ -14,6 +14,8 @@ Teste Ihold
 - Subir os serviços com docker
   >make up
 
+- Gera o secret jwt
+  >make jwt
 
 - Install migration and seeders
   >make db
