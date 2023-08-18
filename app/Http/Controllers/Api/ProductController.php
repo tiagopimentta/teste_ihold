@@ -3,121 +3,103 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\Merchant;
-use App\Models\User;
+use App\Http\Resources\ProductResource;
+use App\Services\ProductService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * @var ProductService
      */
-    public function index()
+    protected ProductService $service;
+
+    public function __construct(ProductService $service)
     {
-        $products = Product::all();
-        return response()->json($products);
+        $this->service = $service;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function create()
+    public function index(Request $request): JsonResponse
     {
-        //
+        return $this->ok(ProductResource::collection(
+            $this
+                ->service
+                ->getRepository()
+                ->getPaginationList(params: $request->all())
+        ));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
-
-        if(!$request->merchant_id){
-            return response()->json("Merchant code does not found");
+        try {
+            DB::beginTransaction();
+            $response = $this->service->save($request->all());
+            DB::commit();
+            return $this->success($this->messageSuccessDefault,
+                $response,
+                Response::HTTP_CREATED
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e->getMessage());
         }
-
-        $dados_merchant = Merchant::find($request->merchant_id);//achou o id de usuario do merchant
-        if(!$dados_merchant){
-            return response()->json("Merchant code does not exist");
-       }
-        $verifica_admin = User::find($dados_merchant->admin_id);//achou se é admim ou nao
-
-        if($verifica_admin->is_admin){
-            $products = $request->all();
-            Product::create($products);
-            return response()->json("Registered Product With Successe");
-       }else{
-        return response()->json("You do not have permission to register a product");
-       }
-
     }
 
     /**
-     * Display the specified resource.
+     * @param string $id
+     * @return JsonResponse
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
-        $products = Product::find($id);
-        return response()->json($products);
+        return $this->ok($this->service->getRepository()->find($id));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @param Request $request
+     * @param string $id
+     * @return JsonResponse
      */
-    public function edit(string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-
-        if(!$request->merchant_id){
-            return response()->json("Merchant code does not found");
+        try {
+            DB::beginTransaction();
+            $response = $this->service->update($id, $request->all());
+            DB::commit();
+            return $this->success(
+                $this->messageSuccessDefault,
+                $response,
+                Response::HTTP_CREATED
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e->getMessage());
         }
-
-        $dados_merchant = Merchant::find($request->merchant_id);//achou o id de usuario do merchant
-        if(!$dados_merchant){
-            return response()->json("Merchant code does not exist");
-       }
-        $verifica_admin = User::find($dados_merchant->admin_id);//achou se é admim ou nao
-
-        if($verifica_admin->is_admin){
-            $data = $request->only(['name','merchant_id','price','status']);
-            $products = Product::find($id);
-            $products->update($data);
-        return response()->json("Altered Product With Successe");
-        }else{
-        return response()->json("You do not have permission to alter a product");
-       }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param string $id
+     * @return JsonResponse
      */
-    public function destroy(Request $request, string $id)
+    public function destroy(string $id): JsonResponse
     {
-        if(!$request->merchant_id){
-            return response()->json("Merchant code does not found");
-        }
-
-        $dados_merchant = Merchant::find($request->merchant_id);//achou o id de usuario do merchant
-        if(!$dados_merchant){
-            return response()->json("Merchant code does not exist");
-       }
-        $verifica_admin = User::find($dados_merchant->admin_id);//achou se é admim ou nao
-
-        if($verifica_admin->is_admin){
-            $products = Product::find($id);
-            $products->delete();
-            return response()->json("Deleted Product With Successe");
-        }else{
-            return response()->json("You do not have permission to delet a product");
+        try {
+            $this->service->getRepository()->find($id);
+            $this->service->delete($id);
+            return $this->success();
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
         }
     }
 }
