@@ -17,6 +17,9 @@ Teste Ihold
 - Copia o arquivo .env.example para o .env
   >make env
 
+- Copia o arquivo .env.example para o .env
+  >make composer
+ 
 - Gera o secret jwt
   >make jwt
 

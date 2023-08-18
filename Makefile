@@ -37,6 +37,8 @@ endif
 token:
 	docker exec $(CONTAINER_NAME) bash  -c "php artisan jwt:token"
 
-
 env:
 	docker exec $(CONTAINER_NAME) bash  -c "cp .env.example .env"
+
+composer:
+	docker exec $(CONTAINER_NAME) bash  -c "composer install"
