@@ -6,7 +6,7 @@ use App\Models\Order;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class MerchantsFactory extends Factory
+class MerchantFactory extends Factory
 {
     /**
      * Define the model's default state.
