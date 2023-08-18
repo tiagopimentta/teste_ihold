@@ -29,7 +29,7 @@ class Controller extends BaseController
      * Mensagem padrão do sistema SUCCESS
      * @var string
      */
-    protected $messageSuccessDefault = 'Operação realizada com com sucesso';
+    protected $messageSuccessDefault = 'Operacao realizada com com sucesso';
 
     /**
      * Mensagem padrão do sistema ERROR
