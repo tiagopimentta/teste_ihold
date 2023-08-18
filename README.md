@@ -14,6 +14,9 @@ Teste Ihold
 - Subir os serviços com docker
   >make up
 
+- Copia o arquivo .env.example para o .env
+  >make env
+
 - Gera o secret jwt
   >make jwt
 

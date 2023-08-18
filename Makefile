@@ -6,7 +6,7 @@ up:
 
 # gera o secret JWT
 jwt:
-	docker exec -t $(CONTAINER_NAME) bash  -c "php artisan jwt:secret -s"
+	docker exec -t $(CONTAINER_NAME) bash  -c "php artisan jwt:secret"
 
 # gera as migrations and seeders
 db:
@@ -29,10 +29,14 @@ down:
 # Se houver o parâmetro group, então executa apenas o group ex: make docker-test group=test-especifico-test
 test:
 ifdef group
-	docker exec -t $(CONTAINER_NAME) ./vendor/bin/phpunit --group="$(group)"
+	docker exec -t $(CONTAINER_NAME) ./vendor/bin/phpunit --group="$(group)" --stop-on-failure
 else
-	docker exec -t $(CONTAINER_NAME) ./vendor/bin/phpunit
+	docker exec -t $(CONTAINER_NAME) ./vendor/bin/phpunit --stop-on-failure
 endif
 
 token:
 	docker exec $(CONTAINER_NAME) bash  -c "php artisan jwt:token"
+
+
+env:
+	docker exec $(CONTAINER_NAME) bash  -c "cp .env.example .env"
