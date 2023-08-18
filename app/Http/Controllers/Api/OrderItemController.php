@@ -29,12 +29,12 @@ class OrderItemController extends Controller
     /**
      * @OA\Get (
      *     tags={"Order Item"},
-     *     path="/api/orders/{orderId}/items",
+     *     path="/api/orders/{id}/items",
      *     summary="List all items of orders",
      *     @OA\Parameter(
      *         description="Order id",
      *         in="path",
-     *         name="orderId",
+     *         name="id",
      *         required=true,
      *     ),
      *     @OA\Response(
@@ -44,9 +44,10 @@ class OrderItemController extends Controller
      *     security={{ "jwt": {} }}
      * )
      * @param Request $request
-     * @param int $orderId
+     * @param int $id
      * @return JsonResponse
      */
+
     public function index(Request $request, int $orderId): JsonResponse
     {
         $request->merge(['order_id' => $orderId]);
@@ -59,9 +60,38 @@ class OrderItemController extends Controller
     }
 
     /**
-     * @param StoreOrderItemRequest $request
+     * Store a new Order.
+     *
+     * @OA\Post (
+     *     tags={"Order Item"},
+     *     path="/api/orders/{id}/items",
+     *     summary="Create a order Item",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Order registered successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     security={{ "jwt": {} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="order_id", type="integer", example="1"),
+     *             @OA\Property(property="product_id", type="integer", example="1"),
+     *             @OA\Property(property="quantity", type="integer", example="10"),
+     *         )
+     *     )
+     * )
+     *
+     * @param  Request  $request
      * @return JsonResponse
      */
+
     public function store(StoreOrderItemRequest $request): JsonResponse
     {
         try {
@@ -79,10 +109,46 @@ class OrderItemController extends Controller
     }
 
     /**
-     * @param UpdateOrderRequest $request
-     * @param int $id
+     * Show an order.
+     *
+     * @OA\Get(
+     *     tags={"Order"},
+     *     path="/api/orders/{id}",
+     *     summary="Get information about an order",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the order to retrieve",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Order retrieved successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="You do not have permission to retrieve the order"
+     *     ),
+     *     security={{ "jwt": {} }}
+     * )
+     *
+     * @param  string $id
      * @return JsonResponse
      */
+
+    public function show(string $id): JsonResponse
+    {
+        return $this->ok($this->service->getRepository()->find($id));
+    }
+
     public function update(UpdateOrderRequest $request, int $id): JsonResponse
     {
         try {
@@ -101,10 +167,36 @@ class OrderItemController extends Controller
     }
 
     /**
-     * @param int $orderId
-     * @param int $id
+     * OrderItem a new Order.
+     *
+     * @OA\Delete (
+     *     tags={"Order Item"},
+     *     path="/api/orders/{id}/items",
+     *     summary="Delete a order Item",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Order registered successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     security={{ "jwt": {} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *         )
+     *     )
+     * )
+     *
+     * @param  Request  $request
      * @return JsonResponse
      */
+
     public function destroy(int $orderId, int $id): JsonResponse
     {
         try {
