@@ -56,7 +56,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a new product.
      *
      * @OA\Post (
      *     tags={"Products"},
@@ -105,7 +104,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Show a Products.
      *
      * @OA\Get(
      *     tags={"Products"},
@@ -116,7 +114,7 @@ class ProductController extends Controller
      *         in="path",
      *         required=true,
      *         description="ID of the products to retrieve",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -136,11 +134,11 @@ class ProductController extends Controller
      *     security={{ "jwt": {} }}
      * )
      *
-     * @param string $id
+     * @param int $id
      * @return JsonResponse
      */
 
-    public function show(string $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         return $this->ok($this->service->getRepository()->find($id));
     }
@@ -155,7 +153,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Update a product.
      *
      * @OA\Put (
      *     tags={"Products"},
@@ -166,7 +163,7 @@ class ProductController extends Controller
      *         in="path",
      *         required=true,
      *         description="ID of the product to update",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -183,7 +180,7 @@ class ProductController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="name", type="string", example="Skoll 200ML"),
+     *             @OA\Property(property="name", type="string", example="Skoll 1L"),
      *             @OA\Property(property="price", type="number", format="float", example="100.00"),
      *             @OA\Property(property="status", type="string", example="Ativo"),
      *         )
@@ -196,7 +193,7 @@ class ProductController extends Controller
      */
 
 
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -214,7 +211,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Delete a product.
      *
      * @OA\Delete (
      *     tags={"Products"},
@@ -225,7 +221,7 @@ class ProductController extends Controller
      *         in="path",
      *         required=true,
      *         description="ID of the product to delete",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -245,11 +241,11 @@ class ProductController extends Controller
      *     security={{ "jwt": {} }}
      * )
      *
-     * @param string $id
+     * @param int $id
      * @return JsonResponse
      */
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
             $this->service->getRepository()->find($id);
