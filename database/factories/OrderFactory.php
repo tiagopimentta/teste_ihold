@@ -15,7 +15,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::inRandomOrder()->where(['is_admin' => false])->first()->id
+            'user_id' => User::inRandomOrder()->where(['is_admin' => false])->first()->id,
         ];
     }
 }

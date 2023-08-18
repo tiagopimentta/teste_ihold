@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('merchant_id');
             $table->foreign('merchant_id')->references('id')->on('merchants');
             $table->integer('price');
-            $table->string('status');
+            $table->enum('status',['Ativo','Inativo']);
             $table->datetime('created_at');
             $table->datetime('updated_at');
         });

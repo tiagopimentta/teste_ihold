@@ -23,7 +23,17 @@ class MerchantController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @OA\Get (
+     *     tags={"Merchants"},
+     *     path="/api/merchants",
+     *     summary="List all merchants",
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *     ),
+     *     security={{ "jwt": {} }}
+     * )
+     * @param Request $id
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -37,9 +47,37 @@ class MerchantController extends Controller
     }
 
     /**
-     * @param Request $request
+     * Store a new Order.
+     *
+     * @OA\Post (
+     *     tags={"Merchants"},
+     *     path="/api/merchants",
+     *     summary="Create a merchants",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Merchants registered successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     security={{ "jwt": {} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="merchant_name", type="string", example="Zé delivery"),
+     *             @OA\Property(property="admin_id", type="integer", example="1"),
+     *         )
+     *     )
+     * )
+     *
+     * @param  Request  $request
      * @return JsonResponse
      */
+
     public function store(Request $request): JsonResponse
     {
         try {
@@ -56,21 +94,86 @@ class MerchantController extends Controller
         }
     }
 
-
     /**
-     * @param string $id
+     * Show a Merchants.
+     *
+     * @OA\Get(
+     *     tags={"Merchants"},
+     *     path="/api/merchants/{id}",
+     *     summary="Get information about an merchants",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the merchants to retrieve",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Merchants retrieved successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Merchants not found"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="You do not have permission to retrieve the merchants"
+     *     ),
+     *     security={{ "jwt": {} }}
+     * )
+     *
+     * @param  int $id
      * @return JsonResponse
      */
+
     public function show(string $id): JsonResponse
     {
         return $this->ok($this->service->getRepository()->find($id));
     }
 
     /**
-     * @param Request $request
-     * @param string $id
+     * Update a Order.
+     *
+     * @OA\Put (
+     *     tags={"Merchants"},
+     *     path="/api/merchants/{$id}/",
+     *     summary="Update a Merchants",
+     *     @OA\Parameter(
+     *         name="merchantId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the merchants to update",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Merchants updated successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     security={{ "jwt": {} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="merchant_name", type="string", example="João"),
+     *         )
+     *     )
+     * )
+     *
+     * @param  Request  $request
+     * @param  string   $id
      * @return JsonResponse
      */
+
     public function update(Request $request, string $id): JsonResponse
     {
         try {
@@ -89,9 +192,41 @@ class MerchantController extends Controller
     }
 
     /**
-     * @param string $id
+     * Delete a Order.
+     *
+     * @OA\Delete (
+     *     tags={"Merchants"},
+     *     path="/api/merchants/{$id}/",
+     *     summary="Delete a merchants",
+     *     @OA\Parameter(
+     *         name="orderId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the merchants to delete",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *             example="Merchant deleted successfully"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="You do not have permission to delete the Merchants"
+     *     ),
+     *     security={{ "jwt": {} }}
+     * )
+     *
+     * @param  string   $id
      * @return JsonResponse
      */
+
     public function destroy(string $id): JsonResponse
     {
         try {
