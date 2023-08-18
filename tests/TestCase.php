@@ -33,6 +33,8 @@ abstract class TestCase extends BaseTestCase
         $this->withHeaders([
             'Authorization' => 'Bearer ' . $response->json('access_token')
         ]);
+          return $response->json('id');
+
     }
 
     public function tearDown(): void
