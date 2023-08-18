@@ -33,3 +33,6 @@ ifdef group
 else
 	docker exec -t $(CONTAINER_NAME) ./vendor/bin/phpunit
 endif
+
+token:
+	docker exec $(CONTAINER_NAME) bash  -c "php artisan jwt:token"

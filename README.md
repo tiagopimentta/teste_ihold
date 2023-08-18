@@ -21,5 +21,8 @@ Teste Ihold
 - Executar os testes
   >make test
 
+- Para documentação (swagger), execute o comando a baixo para gerar um token válido. 
+  >make token
+
 - Swagger API
   >http://localhost:8001/api/documentation
