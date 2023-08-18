@@ -7,8 +7,9 @@ services:
             dockerfile: Dockerfile
         ports:
             - 8001:8000
-        stdin_open: true
-        tty: true
+        #stdin_open: true
+        command: bash -c "composer install && php artisan serve --host=0.0.0.0"
+        #tty: true
         volumes:
             - .:/app
         depends_on:
