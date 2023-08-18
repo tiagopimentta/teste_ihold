@@ -47,7 +47,6 @@ class MerchantController extends Controller
     }
 
     /**
-     * Store a new Order.
      *
      * @OA\Post (
      *     tags={"Merchants"},
@@ -95,8 +94,6 @@ class MerchantController extends Controller
     }
 
     /**
-     * Show a Merchants.
-     *
      * @OA\Get(
      *     tags={"Merchants"},
      *     path="/api/merchants/{id}",
@@ -106,7 +103,7 @@ class MerchantController extends Controller
      *         in="path",
      *         required=true,
      *         description="ID of the merchants to retrieve",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -130,24 +127,23 @@ class MerchantController extends Controller
      * @return JsonResponse
      */
 
-    public function show(string $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         return $this->ok($this->service->getRepository()->find($id));
     }
 
     /**
-     * Update a Order.
      *
      * @OA\Put (
      *     tags={"Merchants"},
-     *     path="/api/merchants/{$id}/",
+     *     path="/api/merchants/{id}/",
      *     summary="Update a Merchants",
      *     @OA\Parameter(
-     *         name="merchantId",
+     *         name="id",
      *         in="path",
      *         required=true,
      *         description="ID of the merchants to update",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -170,11 +166,11 @@ class MerchantController extends Controller
      * )
      *
      * @param  Request  $request
-     * @param  string   $id
+     * @param  int   $id
      * @return JsonResponse
      */
 
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -192,18 +188,17 @@ class MerchantController extends Controller
     }
 
     /**
-     * Delete a Order.
      *
      * @OA\Delete (
      *     tags={"Merchants"},
-     *     path="/api/merchants/{$id}/",
+     *     path="/api/merchants/{id}/",
      *     summary="Delete a merchants",
      *     @OA\Parameter(
-     *         name="orderId",
+     *         name="id",
      *         in="path",
      *         required=true,
      *         description="ID of the merchants to delete",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -223,11 +218,11 @@ class MerchantController extends Controller
      *     security={{ "jwt": {} }}
      * )
      *
-     * @param  string   $id
+     * @param  int  $id
      * @return JsonResponse
      */
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
             $this->service->getRepository()->find($id);

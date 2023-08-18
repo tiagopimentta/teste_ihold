@@ -25,7 +25,6 @@ class OrderItemController extends Controller
         $this->service = $service;
     }
 
-
     /**
      * @OA\Get (
      *     tags={"Order Item"},
@@ -36,6 +35,7 @@ class OrderItemController extends Controller
      *         in="path",
      *         name="id",
      *         required=true,
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -60,7 +60,6 @@ class OrderItemController extends Controller
     }
 
     /**
-     * Store a new Order.
      *
      * @OA\Post (
      *     tags={"Order Item"},
@@ -109,7 +108,6 @@ class OrderItemController extends Controller
     }
 
     /**
-     * Show an order.
      *
      * @OA\Get(
      *     tags={"Order"},
@@ -120,7 +118,7 @@ class OrderItemController extends Controller
      *         in="path",
      *         required=true,
      *         description="ID of the order to retrieve",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -140,11 +138,11 @@ class OrderItemController extends Controller
      *     security={{ "jwt": {} }}
      * )
      *
-     * @param  string $id
+     * @param  int $id
      * @return JsonResponse
      */
 
-    public function show(string $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         return $this->ok($this->service->getRepository()->find($id));
     }
@@ -167,37 +165,49 @@ class OrderItemController extends Controller
     }
 
     /**
-     * OrderItem a new Order.
      *
      * @OA\Delete (
      *     tags={"Order Item"},
-     *     path="/api/orders/{id}/items",
-     *     summary="Delete a order Item",
+     *     path="/api/orders/{orderId}/items/{id} ",
+     *     summary="Delete a orderItem",
+     *     @OA\Parameter(
+     *         name="orderId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the order to delete",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the orderItem to delete",
+     *         @OA\Schema(type="integer")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Success",
      *         @OA\JsonContent(
-     *             example="Order registered successfully"
+     *             example="OrderItem deleted successfully"
      *         )
      *     ),
      *     @OA\Response(
-     *         response=400,
-     *         description="Bad Request"
+     *         response=404,
+     *         description="OrderItem not found"
      *     ),
-     *     security={{ "jwt": {} }},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="integer", example="1"),
-     *         )
-     *     )
+     *     @OA\Response(
+     *         response=403,
+     *         description="You do not have permission to delete the order Item"
+     *     ),
+     *     security={{ "jwt": {} }}
      * )
      *
-     * @param  Request  $request
+     * @param  int $orderId
+     * @param  int $id
      * @return JsonResponse
      */
 
-    public function destroy(int $orderId, int $id): JsonResponse
+    public function destroy(int $orderId ,int $id): JsonResponse
     {
         try {
             $this->service->getRepository()->find($id);

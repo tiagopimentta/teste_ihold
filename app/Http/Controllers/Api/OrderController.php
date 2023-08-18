@@ -51,7 +51,6 @@ class OrderController extends Controller
 
 
     /**
-     * Store a new Order.
      *
      * @OA\Post (
      *     tags={"Order"},
@@ -99,7 +98,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Update a Order.
      *
      * @OA\Put (
      *     tags={"Order"},
@@ -110,7 +108,7 @@ class OrderController extends Controller
      *         in="path",
      *         required=true,
      *         description="ID Order of the order to update",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -133,7 +131,7 @@ class OrderController extends Controller
      * )
      *
      * @param  Request  $request
-     * @param  string   $id
+     * @param  int   $id
      * @return JsonResponse
      */
 
@@ -154,49 +152,12 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Show an order.
-     *
-     * @OA\Get(
-     *     tags={"Order"},
-     *     path="/api/orders/{id}/",
-     *     summary="Get information about an order",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID Order",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Success",
-     *         @OA\JsonContent(
-     *             example="Order retrieved successfully"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Order not found"
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="You do not have permission to retrieve the order"
-     *     ),
-     *     security={{ "jwt": {} }}
-     * )
-     *
-     * @param  string $id
-     * @return JsonResponse
-     */
-
     public function show(string $id): JsonResponse
     {
         return $this->ok($this->service->getRepository()->find($id));
     }
 
     /**
-     * Delete a Order.
      *
      * @OA\Delete (
      *     tags={"Order"},
@@ -207,7 +168,7 @@ class OrderController extends Controller
      *         in="path",
      *         required=true,
      *         description="ID Order of the order to delete",
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -227,7 +188,7 @@ class OrderController extends Controller
      *     security={{ "jwt": {} }}
      * )
      *
-     * @param  string  $id
+     * @param  int  $id
      * @return JsonResponse
      */
 

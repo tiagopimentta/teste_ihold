@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('merchant_id');
-            $table->foreign('merchant_id')->references('id')->on('merchants');
+            $table->foreign('merchant_id')->references('id')->on('merchants')->onDelete('cascade');
             $table->integer('price');
             $table->enum('status',['Ativo','Inativo']);
             $table->datetime('created_at');

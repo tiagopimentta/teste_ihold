@@ -33,10 +33,12 @@ Route::group(['middleware' => ['apiJwt']], function() {
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::resource('/orders', OrderController::class);
+
     Route::group(['prefix' => '/orders/{id}/'], function() {
         Route::resource('items', OrderItemController::class)
             ->only('index', 'store', 'destroy');
     });
+
     Route::resource('merchants', MerchantController::class);
     Route::resource('products', ProductController::class);
 });

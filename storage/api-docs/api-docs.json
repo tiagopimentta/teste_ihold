@@ -29,7 +29,6 @@
                     "Merchants"
                 ],
                 "summary": "Create a merchants",
-                "description": "Store a new Order.",
                 "operationId": "15db992a94c43f36e50daf7853b53ca2",
                 "requestBody": {
                     "required": true,
@@ -78,7 +77,6 @@
                     "Merchants"
                 ],
                 "summary": "Get information about an merchants",
-                "description": "Show a Merchants.",
                 "operationId": "56beef28bbe1d805bab17fb72672742e",
                 "parameters": [
                     {
@@ -87,7 +85,7 @@
                         "description": "ID of the merchants to retrieve",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -115,22 +113,21 @@
                 ]
             }
         },
-        "/api/merchants/{$id}/": {
+        "/api/merchants/{id}/": {
             "put": {
                 "tags": [
                     "Merchants"
                 ],
                 "summary": "Update a Merchants",
-                "description": "Update a Order.",
-                "operationId": "b5d39b1615d465cf73a31877188716b3",
+                "operationId": "f4f017cb86fe4151d40af5067aef8b06",
                 "parameters": [
                     {
-                        "name": "merchantId",
+                        "name": "id",
                         "in": "path",
                         "description": "ID of the merchants to update",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -175,16 +172,15 @@
                     "Merchants"
                 ],
                 "summary": "Delete a merchants",
-                "description": "Delete a Order.",
-                "operationId": "a21e569f05d8e3276f9de39180ecfda4",
+                "operationId": "a9956f34f6fb90140b46fc41d2123051",
                 "parameters": [
                     {
-                        "name": "orderId",
+                        "name": "id",
                         "in": "path",
                         "description": "ID of the merchants to delete",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -235,7 +231,6 @@
                     "Order"
                 ],
                 "summary": "Create a orders",
-                "description": "Store a new Order.",
                 "operationId": "2123ba58dadb22bd6f2c8081af562230",
                 "requestBody": {
                     "required": true,
@@ -280,7 +275,6 @@
                     "Order"
                 ],
                 "summary": "Get information about an order",
-                "description": "Show an order.",
                 "operationId": "9d3d8ffc4d683c7b2e6ee85c8b71ca83",
                 "parameters": [
                     {
@@ -289,7 +283,7 @@
                         "description": "ID of the order to retrieve",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -321,7 +315,6 @@
                     "Order"
                 ],
                 "summary": "Order a product",
-                "description": "Update a Order.",
                 "operationId": "38a1b85e8294795a1b0dc438a36e319f",
                 "parameters": [
                     {
@@ -330,7 +323,7 @@
                         "description": "ID Order of the order to update",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -372,53 +365,11 @@
             }
         },
         "/api/orders/{id}/": {
-            "get": {
-                "tags": [
-                    "Order"
-                ],
-                "summary": "Get information about an order",
-                "description": "Show an order.",
-                "operationId": "03255c89fcebaf2cf7543f605bfb717a",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID Order",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": "Order retrieved successfully"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Order not found"
-                    },
-                    "403": {
-                        "description": "You do not have permission to retrieve the order"
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            },
             "delete": {
                 "tags": [
                     "Order"
                 ],
                 "summary": "Delete a order",
-                "description": "Delete a Order.",
                 "operationId": "7b1202ccb2733445675b779971e75ea4",
                 "parameters": [
                     {
@@ -427,7 +378,7 @@
                         "description": "ID Order of the order to delete",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -467,7 +418,10 @@
                         "name": "id",
                         "in": "path",
                         "description": "Order id",
-                        "required": true
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
                 ],
                 "responses": {
@@ -486,7 +440,6 @@
                     "Order Item"
                 ],
                 "summary": "Create a order Item",
-                "description": "Store a new Order.",
                 "operationId": "6092017cb8f203b75115c6428fe85478",
                 "requestBody": {
                     "required": true,
@@ -531,42 +484,50 @@
                         "jwt": []
                     }
                 ]
-            },
+            }
+        },
+        "/api/orders/{orderId}/items/{id} ": {
             "delete": {
                 "tags": [
                     "Order Item"
                 ],
-                "summary": "Delete a order Item",
-                "description": "OrderItem a new Order.",
-                "operationId": "87665c0cc33c809bea112494857c385d",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "id": {
-                                        "type": "integer",
-                                        "example": "1"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "summary": "Delete a orderItem",
+                "operationId": "c5ee3fa19b9e5dd2cb295762280ad223",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "ID of the order to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the orderItem to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {},
-                                "example": "Order registered successfully"
+                                "example": "OrderItem deleted successfully"
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request"
+                    "404": {
+                        "description": "OrderItem not found"
+                    },
+                    "403": {
+                        "description": "You do not have permission to delete the order Item"
                     }
                 },
                 "security": [
@@ -599,7 +560,6 @@
                     "Products"
                 ],
                 "summary": "Create a product",
-                "description": "Store a new product.",
                 "operationId": "785644b7d7dd38af4b51dafd0fbc1b6d",
                 "requestBody": {
                     "required": true,
@@ -656,7 +616,6 @@
                     "Products"
                 ],
                 "summary": "Get information about an products",
-                "description": "Show a Products.",
                 "operationId": "c87fb2e4d617e7b36c712cad358acdb8",
                 "parameters": [
                     {
@@ -665,7 +624,7 @@
                         "description": "ID of the products to retrieve",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -699,7 +658,6 @@
                     "Products"
                 ],
                 "summary": "Update a product",
-                "description": "Update a product.",
                 "operationId": "6c9598a1c81a723f93a5d15abdf9c73b",
                 "parameters": [
                     {
@@ -708,7 +666,7 @@
                         "description": "ID of the product to update",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -720,7 +678,7 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Skoll 200ML"
+                                        "example": "Skoll 1L"
                                     },
                                     "price": {
                                         "type": "number",
@@ -762,7 +720,6 @@
                     "Products"
                 ],
                 "summary": "Delete a product",
-                "description": "Delete a product.",
                 "operationId": "5b08645abe47a18595b67d1d1d5e5a46",
                 "parameters": [
                     {
@@ -771,7 +728,7 @@
                         "description": "ID of the product to delete",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
