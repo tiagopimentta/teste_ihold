@@ -32,3 +32,4 @@ RUN apt-get update && \
 WORKDIR /app
 COPY . .
 RUN composer install
+
